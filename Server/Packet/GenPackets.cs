@@ -1,0 +1,58 @@
+using Server.Utility;
+using ServerCore;
+
+namespace PotionHeroServer.Packet;
+
+public enum PacketType
+{
+    S_BroadcastGainedDmg = 1,
+	
+}
+
+public interface IPacket
+{
+    ushort Protocol { get; }
+    void Read(ArraySegment<byte> segment);
+    ArraySegment<byte> Write();
+}
+
+public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
+{
+    public int hostGainedDmg;
+	public int guestGainedDmg;
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastGainedDmg; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.hostGainedDmg = ReadBytes(buffer, ref count, this.hostGainedDmg);
+		this.guestGainedDmg = ReadBytes(buffer, ref count, this.guestGainedDmg);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastGainedDmg);
+        success &= WriteBytes(ref buffer, ref count, hostGainedDmg);
+		success &= WriteBytes(ref buffer, ref count, guestGainedDmg);
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+
