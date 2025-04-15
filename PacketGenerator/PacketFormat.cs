@@ -5,7 +5,7 @@ public class PacketFormat
     // {0} 패킷 이름/ 번호 목록
     // {1} 패킷 목록
     public static string fileFormat =
-        @"using PotionHeroServer.Tools;
+        @"using Server.Utility;
 using ServerCore;
 
 namespace PotionHeroServer.Packet;
