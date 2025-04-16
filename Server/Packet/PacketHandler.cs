@@ -1,8 +1,7 @@
-﻿using Server;
-using Server.Session;
+﻿using Server.Session;
 using ServerCore;
 
-namespace PotionHeroServer.Packet;
+namespace Server.Packet;
 
 public class PacketHandler
 {
