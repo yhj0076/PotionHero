@@ -1,4 +1,5 @@
-﻿using Server.Session;
+﻿using PotionHeroServer.Packet;
+using Server.Session;
 using ServerCore;
 
 namespace Server;
@@ -29,16 +30,21 @@ public class GameRoom : IJobQueue
         _pendingList.Add(segment);
     }
 
-    public void Enter(ClientSession clientSession)
+    public void Enter(ClientSession session)
     {
         // 플레이어 추가
-        _clientSessions.Add(clientSession);
-        clientSession.Room = this;
+        _clientSessions.Add(session);
+        session.Room = this;
     }
 
     public void Leave(ClientSession session)
     {
         // 플레이어 제거
         _clientSessions.Remove(session);
+    }
+
+    public void CalcDmg(ClientSession session, C_GainedDmg gainedDmg)
+    {
+        
     }
 }
