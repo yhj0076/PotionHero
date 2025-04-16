@@ -35,6 +35,8 @@ class Program
 
             string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
             File.WriteAllText("GenPackets.cs", fileText);
+            string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
+            File.WriteAllText("ServerPacketManager.cs", serverManagerText);
         }
     }
 
@@ -60,6 +62,16 @@ class Program
         genPackets += string.Format(PacketFormat.packetFormat,
             packetName, t.Item1, t.Item2, t.Item3);
         packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetId) + Environment.NewLine + "\t";
+        
+        if(packetName.StartsWith("S_") || packetName.StartsWith("s_"))
+            clientRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
+        else if(packetName.StartsWith("C_") || packetName.StartsWith("c_"))
+            serverRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
+        else
+        {
+            Console.WriteLine("Check packet name. Is it starts with \"S_\" or \"C_\"?");
+            return;
+        }
     }
 
     private static Tuple<string,string,string> ParseMembers(XmlReader r)
