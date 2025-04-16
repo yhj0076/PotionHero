@@ -1,7 +1,5 @@
-using PotionHeroServer.Packet;
+using Server.Packet;
 using ServerCore;
-
-namespace Server.Packet;
 
 public class PacketManager
 {
@@ -18,14 +16,14 @@ public class PacketManager
     Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>> _makeFunc = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>>();
     Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
 
-    private void Register()
+    public void Register()
     {
         _makeFunc.Add((ushort)PacketType.C_GainedDmg, MakePacket<C_GainedDmg>);
         _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
 
     }
 
-    private void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
+    public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
     {
         ushort count = 0;
         ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);

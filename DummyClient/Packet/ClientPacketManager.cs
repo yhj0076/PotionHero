@@ -1,4 +1,4 @@
-using Server.Packet;
+using DummyClient.Packet;
 using ServerCore;
 
 public class PacketManager
@@ -18,8 +18,8 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketType.C_GainedDmg, MakePacket<C_GainedDmg>);
-        _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
+        _makeFunc.Add((ushort)PacketType.S_BroadcastGainedDmg, MakePacket<S_BroadcastGainedDmg>);
+        _handler.Add((ushort)PacketType.S_BroadcastGainedDmg, PacketHandler.S_BroadcastGainedDmgHandler);
 
     }
 

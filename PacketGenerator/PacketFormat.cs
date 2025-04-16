@@ -3,11 +3,10 @@
 public class PacketFormat
 {
     // {0} 패킷 등록
+    // {1} DummyClient or Server
     public static string managerFormat = 
-@"using PotionHeroServer.Packet;
+@"using {1}.Packet;
 using ServerCore;
-
-namespace Server.Packet;
 
 public class PacketManager
 {{
@@ -24,12 +23,12 @@ public class PacketManager
     Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>> _makeFunc = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>>();
     Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
 
-    private void Register()
+    public void Register()
     {{
 {0}
     }}
 
-    private void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
+    public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
     {{
         ushort count = 0;
         ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
@@ -73,8 +72,6 @@ public class PacketManager
     public static string fileFormat =
         @"using Server.Utility;
 using ServerCore;
-
-namespace PotionHeroServer.Packet;
 
 public enum PacketType
 {{

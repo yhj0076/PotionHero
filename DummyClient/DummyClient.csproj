@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ServerCore\ServerCore.csproj" />
+      <ProjectReference Include="..\Server\Server.csproj" />
     </ItemGroup>
 
 </Project>
