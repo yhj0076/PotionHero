@@ -35,8 +35,10 @@ class Program
 
             string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
             File.WriteAllText("GenPackets.cs", fileText);
-            string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
+            string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister, "Server");
             File.WriteAllText("ServerPacketManager.cs", serverManagerText);
+            string clientManagerText = string.Format(PacketFormat.managerFormat, clientRegister, "DummyClient");
+            File.WriteAllText("ClientPacketManager.cs", clientManagerText);
         }
     }
 
