@@ -30,7 +30,7 @@ public abstract class PacketSession : Session
         return processLen;
     }
 
-    public abstract void OnRecvPacket(ArraySegment<byte> arraySegment);
+    public abstract void OnRecvPacket(ArraySegment<byte> buffer);
 }
 
 public abstract class Session
