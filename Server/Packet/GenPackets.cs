@@ -1,8 +1,6 @@
 using Server.Utility;
 using ServerCore;
 
-namespace PotionHeroServer.Packet;
-
 public enum PacketType
 {
     S_BroadcastGainedDmg = 1,
