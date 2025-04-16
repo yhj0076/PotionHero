@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Server.Packet;
 using ServerCore;
 
 namespace Server.Session;
@@ -15,7 +16,7 @@ public class ClientSession : PacketSession
     {
         Console.WriteLine($"Connected to {endPoint}");
         
-        Program.Room.
+        Program._room.Push(() => Program._room.Enter(this));
     }
 
     public override void OnSend(int numOfBytes)
@@ -25,11 +26,19 @@ public class ClientSession : PacketSession
 
     public override void OnDisconnected(EndPoint endPoint)
     {
-        throw new NotImplementedException();
+        SessionManager.Instance.Remove(this);
+        if (Room != null)
+        {
+            GameRoom gameRoom = Room;
+            gameRoom.Push(() => gameRoom.Leave(this));
+            Room = null;
+        }
+
+        Console.WriteLine($"Disconnected from {endPoint}");
     }
 
-    public override void OnRecvPacket(ArraySegment<byte> arraySegment)
+    public override void OnRecvPacket(ArraySegment<byte> buffer)
     {
-        throw new NotImplementedException();
+        PacketManager.Instance.OnRecvPacket(this, buffer);
     }
 }
