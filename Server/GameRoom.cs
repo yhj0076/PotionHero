@@ -34,8 +34,11 @@ public class GameRoom : IJobQueue
         // 플레이어 추가
         _clientSessions.Add(clientSession);
         clientSession.Room = this;
-        
-        // 상대방 도착 정보 전송
-        // clientSession.Send();
+    }
+
+    public void Leave(ClientSession session)
+    {
+        // 플레이어 제거
+        _clientSessions.Remove(session);
     }
 }
