@@ -4,4 +4,7 @@
         <int name="hostGainedDmg"/>
         <int name="guestGainedDmg"/>
     </packet>
+    <packet name="C_GainedDmg">
+        <int name="gainedDmg"/>
+    </packet>
 </PacketLauncher>
