@@ -13,6 +13,5 @@ public class PacketHandler
         Console.WriteLine($"Ping : {packetData.ping}");
         serverSession.pong = packetData.ping + 1;
         packetData.ping = serverSession.pong;
-        //serverSession.Send(packetData.Write());
     }
 }
