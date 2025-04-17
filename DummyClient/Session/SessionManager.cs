@@ -29,10 +29,6 @@ public class SessionManager
         {
             if (_sessions.Count > 0)
             {
-                //Console.WriteLine("Sending sessions");
-                // C_GainedDmg cGainedDmg = new C_GainedDmg();
-                // cGainedDmg.gainedDmg = 10;
-                // _sessions[0].Send(cGainedDmg.Write());
                 C_Pong pong = new C_Pong();
                 pong.pong = 1;
                 _sessions[0].Send(pong.Write());
