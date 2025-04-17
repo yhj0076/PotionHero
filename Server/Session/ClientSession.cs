@@ -8,20 +8,22 @@ public class ClientSession : PacketSession
 {
     public int SessionId { get; set; }
     public GameRoom Room { get; set; }
-    
-    public int HP { get; set; }
-    public int gainedPower  { get; set; }
+    public int pong { get; set; }
     
     public override void OnConnected(EndPoint endPoint)
     {
         Console.WriteLine($"Session : Connected to {endPoint}");
         
-        Program._room.Push(() => Program._room.Enter(this));
+        Program._room.Push(() =>
+        {
+            Program._room.Enter(this);
+        });
     }
 
     public override void OnSend(int numOfBytes)
     {
         // throw new NotImplementedException();
+        //Room.StartHeartbeat(this);
     }
 
     public override void OnDisconnected(EndPoint endPoint)
