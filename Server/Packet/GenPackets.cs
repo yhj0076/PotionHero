@@ -1,4 +1,4 @@
-using Server.Exception;
+using Server.Utility;
 using ServerCore;
 
 public enum PacketType
@@ -15,7 +15,7 @@ public interface IPacket
     ArraySegment<byte> Write();
 }
 
-public class S_Ping : IPacket
+public class S_Ping : ByteControlHelper, IPacket
 {
     public int ping;
     
@@ -26,10 +26,8 @@ public class S_Ping : IPacket
         ushort count = 0;
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
-        count += sizeof(ushort);
-        this.ping = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(int);
-        Console.WriteLine($"count: {count}");
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.ping = ReadBytes(buffer, ref count, this.ping);
     }
 
     public ArraySegment<byte> Write()
@@ -42,11 +40,9 @@ public class S_Ping : IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.S_Ping);
-        count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), ping);
-        count += sizeof(int);
-
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_Ping);
+        success &= WriteBytes(ref buffer, ref count, ping);
+        
         success &= BitConverter.TryWriteBytes(buffer, count);
         
         if (success == false)
@@ -55,7 +51,7 @@ public class S_Ping : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class C_Pong : IPacket
+public class C_Pong : ByteControlHelper, IPacket
 {
     public int pong;
     
@@ -66,10 +62,8 @@ public class C_Pong : IPacket
         ushort count = 0;
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
-        count += sizeof(ushort);
-        this.pong = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(int);
-        Console.WriteLine($"count: {count}");
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.pong = ReadBytes(buffer, ref count, this.pong);
     }
 
     public ArraySegment<byte> Write()
@@ -82,11 +76,9 @@ public class C_Pong : IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.C_Pong);
-        count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), pong);
-        count += sizeof(int);
-
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_Pong);
+        success &= WriteBytes(ref buffer, ref count, pong);
+        
         success &= BitConverter.TryWriteBytes(buffer, count);
         
         if (success == false)
