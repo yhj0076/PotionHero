@@ -38,12 +38,12 @@ public class SendBuffer
         get { return _buffer.Length - _usedSize; } 
     }
 
-    public ArraySegment<byte> Open(int reserverdSize)
+    public ArraySegment<byte> Open(int reservedSize)
     {
-        if (reserverdSize > FreeSize)
+        if (reservedSize > FreeSize)
             return null;
         
-        return new ArraySegment<byte>(_buffer, _usedSize, reserverdSize);
+        return new ArraySegment<byte>(_buffer, _usedSize, reservedSize);
     }
 
     public ArraySegment<byte> Close(int usedSize)

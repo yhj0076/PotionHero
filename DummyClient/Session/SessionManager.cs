@@ -14,9 +14,28 @@ public class SessionManager
     {
         lock (_lock)
         {
-            foreach (var session in _sessions)
+            foreach (ServerSession session in _sessions)
             {
-                
+                C_Pong packet = new C_Pong();
+                packet.pong = 1;
+                session.Send(packet.Write());
+            }
+        }
+    }
+
+    public void Send()
+    {
+        lock (_lock)
+        {
+            if (_sessions.Count > 0)
+            {
+                C_Pong pong = new C_Pong();
+                pong.pong = 1;
+                _sessions[0].Send(pong.Write());
+            }
+            else
+            {
+                Console.WriteLine("No sessions left");
             }
         }
     }
@@ -27,6 +46,7 @@ public class SessionManager
         {
             ServerSession session = new ServerSession();
             _sessions.Add(session);
+            Console.WriteLine("Session generated");
             return session;
         }
     }

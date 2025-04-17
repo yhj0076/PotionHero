@@ -3,8 +3,8 @@ using ServerCore;
 
 public enum PacketType
 {
-    S_BroadcastGainedDmg = 1,
-	C_GainedDmg = 2,
+    S_Ping = 1,
+	C_Pong = 2,
 	
 }
 
@@ -15,12 +15,11 @@ public interface IPacket
     ArraySegment<byte> Write();
 }
 
-public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
+public class S_Ping : ByteControlHelper, IPacket
 {
-    public int hostGainedDmg;
-	public int guestGainedDmg;
+    public int ping;
     
-    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastGainedDmg; } }
+    public ushort Protocol { get { return (ushort)PacketType.S_Ping; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -28,8 +27,7 @@ public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.hostGainedDmg = ReadBytes(buffer, ref count, this.hostGainedDmg);
-		this.guestGainedDmg = ReadBytes(buffer, ref count, this.guestGainedDmg);
+        this.ping = ReadBytes(buffer, ref count, this.ping);
     }
 
     public ArraySegment<byte> Write()
@@ -42,9 +40,8 @@ public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastGainedDmg);
-        success &= WriteBytes(ref buffer, ref count, hostGainedDmg);
-		success &= WriteBytes(ref buffer, ref count, guestGainedDmg);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_Ping);
+        success &= WriteBytes(ref buffer, ref count, ping);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         
@@ -54,11 +51,11 @@ public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class C_GainedDmg : ByteControlHelper, IPacket
+public class C_Pong : ByteControlHelper, IPacket
 {
-    public int gainedDmg;
+    public int pong;
     
-    public ushort Protocol { get { return (ushort)PacketType.C_GainedDmg; } }
+    public ushort Protocol { get { return (ushort)PacketType.C_Pong; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -66,7 +63,7 @@ public class C_GainedDmg : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.gainedDmg = ReadBytes(buffer, ref count, this.gainedDmg);
+        this.pong = ReadBytes(buffer, ref count, this.pong);
     }
 
     public ArraySegment<byte> Write()
@@ -79,8 +76,8 @@ public class C_GainedDmg : ByteControlHelper, IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_GainedDmg);
-        success &= WriteBytes(ref buffer, ref count, gainedDmg);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_Pong);
+        success &= WriteBytes(ref buffer, ref count, pong);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         

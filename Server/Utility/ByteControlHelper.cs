@@ -35,7 +35,7 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(char);
         return success;
     }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, double value)
@@ -43,7 +43,7 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(double);
         return success;
     }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, float value)
@@ -51,39 +51,39 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(float);
         return success;
     }
-    protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, Half value)
-    {
-        bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
-        if (success == false)
-            throw new WriteBytesException();
-        count += sizeof(bool);
-        return success;
-    }
+    // protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, Half value)
+    // {
+    //     bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
+    //     if (success == false)
+    //         throw new WriteBytesException();
+    //     count += sizeof(Half);
+    //     return success;
+    // }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, int value)
     {
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(int);
         return success;
     }
-    protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, Int128 value)
-    {
-        bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
-        if (success == false)
-            throw new WriteBytesException();
-        count += sizeof(bool);
-        return success;
-    }
+    // protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, Int128 value)
+    // {
+    //     bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
+    //     if (success == false)
+    //         throw new WriteBytesException();
+    //     count += sizeof(bool);
+    //     return success;
+    // }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, long value)
     {
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(long);
         return success;
     }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, short value)
@@ -91,7 +91,7 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(short);
         return success;
     }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, uint value)
@@ -99,23 +99,23 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(uint);
         return success;
     }
-    protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, UInt128 value)
-    {
-        bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
-        if (success == false)
-            throw new WriteBytesException();
-        count += sizeof(bool);
-        return success;
-    }
+    // protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, UInt128 value)
+    // {
+    //     bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
+    //     if (success == false)
+    //         throw new WriteBytesException();
+    //     count += sizeof(bool);
+    //     return success;
+    // }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, ulong value)
     {
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(ulong);
         return success;
     }
     protected bool WriteBytes(ref Span<byte> buffer, ref ushort count, ushort value)
@@ -123,7 +123,7 @@ public class ByteControlHelper
         bool success = BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), value);
         if (success == false)
             throw new WriteBytesException();
-        count += sizeof(bool);
+        count += sizeof(ushort);
         return success;
     }
     #endregion
@@ -140,84 +140,84 @@ public class ByteControlHelper
     protected char ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, char value)
     {
         char readByte = BitConverter.ToChar(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(char);
         return readByte;
     }
     
     protected double ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, double value)
     {
         double readByte = BitConverter.ToDouble(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(double);
         return readByte;
     }
     
     protected float ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, float value)
     {
         float readByte = BitConverter.ToSingle(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(float);
         return readByte;
     }
     
-    protected Half ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, Half value)
-    {
-        Half readByte = BitConverter.ToHalf(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
-        return readByte;
-    }
+    // protected Half ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, Half value)
+    // {
+    //     Half readByte = BitConverter.ToHalf(buffer.Slice(count, buffer.Length - count));
+    //     count += sizeof(bool);
+    //     return readByte;
+    // }
     
     protected int ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, int value)
     {
         int readByte = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(int);
         return readByte;
     }
     
-    protected Int128 ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, Int128 value)
-    {
-        Int128 readByte = BitConverter.ToInt128(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
-        return readByte;
-    }
+    // protected Int128 ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, Int128 value)
+    // {
+    //     Int128 readByte = BitConverter.ToInt128(buffer.Slice(count, buffer.Length - count));
+    //     count += sizeof(bool);
+    //     return readByte;
+    // }
     
     protected long ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, long value)
     {
         long readByte = BitConverter.ToInt64(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(long);
         return readByte;
     }
     
     protected short ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, short value)
     {
         short readByte = BitConverter.ToInt16(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(short);
         return readByte;
     }
 
     protected uint ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, uint value)
     {
         uint readByte = BitConverter.ToUInt32(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(uint);
         return readByte;
     }
     
-    protected UInt128 ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, UInt128 value)
-    {
-        UInt128 readByte = BitConverter.ToUInt128(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
-        return readByte;
-    }
+    // protected UInt128 ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, UInt128 value)
+    // {
+    //     UInt128 readByte = BitConverter.ToUInt128(buffer.Slice(count, buffer.Length - count));
+    //     count += sizeof(bool);
+    //     return readByte;
+    // }
     
     protected ulong ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, ulong value)
     {
         ulong readByte = BitConverter.ToUInt64(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(ulong);
         return readByte;
     }
     
     protected ushort ReadBytes(ReadOnlySpan<byte> buffer, ref ushort count, ushort value)
     {
         ushort readByte = BitConverter.ToUInt16(buffer.Slice(count, buffer.Length - count));
-        count += sizeof(bool);
+        count += sizeof(ushort);
         return readByte;
     }
     

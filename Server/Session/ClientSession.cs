@@ -8,24 +8,27 @@ public class ClientSession : PacketSession
 {
     public int SessionId { get; set; }
     public GameRoom Room { get; set; }
-    
-    public int HP { get; set; }
-    public int gainedPower  { get; set; }
+    public int pong { get; set; }
     
     public override void OnConnected(EndPoint endPoint)
     {
-        Console.WriteLine($"Connected to {endPoint}");
+        Console.WriteLine($"Session : Connected to {endPoint}");
         
-        Program._room.Push(() => Program._room.Enter(this));
+        Program._room.Push(() =>
+        {
+            Program._room.Enter(this);
+        });
     }
 
     public override void OnSend(int numOfBytes)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        //Room.StartHeartbeat(this);
     }
 
     public override void OnDisconnected(EndPoint endPoint)
     {
+        // Console.WriteLine($"Disconnecting from {endPoint}");
         SessionManager.Instance.Remove(this);
         if (Room != null)
         {
@@ -39,6 +42,7 @@ public class ClientSession : PacketSession
 
     public override void OnRecvPacket(ArraySegment<byte> buffer)
     {
+        // Console.WriteLine("OnRecvPacket");
         PacketManager.Instance.OnRecvPacket(this, buffer);
     }
 }

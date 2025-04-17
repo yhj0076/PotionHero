@@ -18,7 +18,7 @@ class Program
         connector.Connect(endPoint, () =>
         {
             return SessionManager.Instance.Generate();
-        },10);
+        },2);
 
         while (true)
         {

@@ -31,8 +31,11 @@ public class JobQueue : IJobQueue
         {
             Action job = Pop();
             if (job == null)
+            {
+                Console.WriteLine("Job queue is empty");
                 return;
-            
+            }
+
             job.Invoke();
         }
     }

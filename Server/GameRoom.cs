@@ -35,6 +35,9 @@ public class GameRoom : IJobQueue
         // 플레이어 추가
         _clientSessions.Add(session);
         session.Room = this;
+        
+        S_Ping ping = new S_Ping();
+        ping.ping = 0;
     }
 
     public void Leave(ClientSession session)
@@ -43,8 +46,11 @@ public class GameRoom : IJobQueue
         _clientSessions.Remove(session);
     }
 
-    public void CalcDmg(ClientSession session, C_GainedDmg gainedDmg)
+    public void Ping(ClientSession session, int pong)
     {
-        
+        session.pong = pong;
+        S_Ping ping = new S_Ping();
+        ping.ping = session.pong+1;
+        Broadcast(ping.Write());
     }
 }

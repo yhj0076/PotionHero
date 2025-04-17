@@ -28,7 +28,7 @@ public class RecvBuffer
 
     public ArraySegment<byte> RecvSegment
     {
-        get {return new ArraySegment<byte>(_buffer.Array, _buffer.Offset + _writePos, DataSize);}
+        get {return new ArraySegment<byte>(_buffer.Array, _buffer.Offset + _writePos, FreeSize);}
     }
 
     public void Clean()

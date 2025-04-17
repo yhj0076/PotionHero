@@ -5,14 +5,17 @@ namespace DummyClient.Session;
 
 public class ServerSession : PacketSession
 {
+    public int pong { get; set; }
     public override void OnConnected(EndPoint endPoint)
     {
         Console.WriteLine($"Connected to {endPoint}");
+        // this.Send(pong.Write());
     }
 
     public override void OnSend(int numOfBytes)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        Console.WriteLine($"Sending {numOfBytes} bytes");
     }
 
     public override void OnDisconnected(EndPoint endPoint)
