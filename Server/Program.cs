@@ -11,7 +11,10 @@ class Program
     private static int portNum = 8080;
     static void FlushRoom()
     {
-        _room.Push(() => _room.Flush());
+        _room.Push(() =>
+        {
+            _room.Flush();
+        });
         JobTimer.Instance.Push(FlushRoom, 250);
     }
     
