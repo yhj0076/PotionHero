@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PacketLauncher>
-    <packet name="S_BroadcastGainedDmg">
-        <int name="gainedDmg"/>
+    <packet name="S_Ping">
+        <int name="ping"/>
     </packet>
-    <packet name="C_GainedDmg">
-        <int name="gainedDmg"/>
+    <packet name="C_Pong">
+        <int name="pong"/>
     </packet>
 </PacketLauncher>
