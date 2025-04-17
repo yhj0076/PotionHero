@@ -5,17 +5,20 @@ namespace Server.Packet;
 
 public class PacketHandler
 {
-    public static void C_GainedDmgHandler(PacketSession session, IPacket packet)
+    public static void C_PongHandler(PacketSession session, IPacket packet)
     {
-        ClientSession clientSession = (ClientSession)session;
-        C_GainedDmg gainedDmg = (C_GainedDmg)packet;
+        ClientSession clientSession = session as ClientSession;
+        C_Pong c_Pong = packet as C_Pong;
         
         if (clientSession.Room == null)
+        {
             return;
+        }
         
-        GameRoom room = clientSession.Room;
-        room.Push(
-            () => room.CalcDmg(clientSession, gainedDmg)
-            );
+        GameRoom gameRoom = clientSession.Room;
+        gameRoom.Push(() =>
+        {
+            gameRoom.Ping(clientSession,c_Pong.pong);
+        });
     }
 }

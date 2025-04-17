@@ -1,10 +1,10 @@
-using Server.Utility;
+using Server.Exception;
 using ServerCore;
 
 public enum PacketType
 {
-    S_BroadcastGainedDmg = 1,
-	C_GainedDmg = 2,
+    S_Ping = 1,
+	C_Pong = 2,
 	
 }
 
@@ -15,11 +15,11 @@ public interface IPacket
     ArraySegment<byte> Write();
 }
 
-public class S_BroadcastGainedDmg : IPacket
+public class S_Ping : IPacket
 {
-    public int gainedDmg;
+    public int ping;
     
-    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastGainedDmg; } }
+    public ushort Protocol { get { return (ushort)PacketType.S_Ping; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -27,8 +27,7 @@ public class S_BroadcastGainedDmg : IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        // this.gainedDmg = ReadBytes(buffer, ref count, this.gainedDmg);
-        this.gainedDmg = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
+        this.ping = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
         count += sizeof(int);
     }
 
@@ -42,29 +41,24 @@ public class S_BroadcastGainedDmg : IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        // success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastGainedDmg);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.S_BroadcastGainedDmg);
+        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.S_Ping);
         count += sizeof(ushort);
-        // success &= WriteBytes(ref buffer, ref count, gainedDmg);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), gainedDmg);
+        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), ping);
         count += sizeof(int);
-        
-        success &= BitConverter.TryWriteBytes(buffer, count);
 
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
         if (success == false)
-        {
-            Console.WriteLine("S_BroadcastGainedDmg Write() Failed");
             return null;
-        }
 
         return SendBufferHelper.Close(count);
     }
 }
-public class C_GainedDmg : ByteControlHelper, IPacket
+public class C_Pong : IPacket
 {
-    public int gainedDmg;
+    public int pong;
     
-    public ushort Protocol { get { return (ushort)PacketType.C_GainedDmg; } }
+    public ushort Protocol { get { return (ushort)PacketType.C_Pong; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -72,8 +66,7 @@ public class C_GainedDmg : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        // this.gainedDmg = ReadBytes(buffer, ref count, this.gainedDmg);
-        this.gainedDmg = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
+        this.pong = BitConverter.ToInt32(buffer.Slice(count, buffer.Length - count));
         count += sizeof(int);
     }
 
@@ -87,22 +80,16 @@ public class C_GainedDmg : ByteControlHelper, IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        // success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_GainedDmg);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.C_GainedDmg);
+        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), (ushort)PacketType.C_Pong);
         count += sizeof(ushort);
-        // success &= WriteBytes(ref buffer, ref count, gainedDmg);
-        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), gainedDmg);
+        success &= BitConverter.TryWriteBytes(buffer.Slice(count, buffer.Length - count), pong);
         count += sizeof(int);
-        
-        success &= BitConverter.TryWriteBytes(buffer, count);
 
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
         if (success == false)
-        {
-            Console.WriteLine("C_GainedDmg Write() failed");
             return null;
-        }
 
         return SendBufferHelper.Close(count);
     }
 }
-

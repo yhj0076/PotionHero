@@ -18,8 +18,8 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketType.C_GainedDmg, MakePacket<C_GainedDmg>);
-        _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
+        _makeFunc.Add((ushort)PacketType.C_Pong, MakePacket<C_Pong>);
+        _handler.Add((ushort)PacketType.C_Pong, PacketHandler.C_PongHandler);
 
     }
 
@@ -27,9 +27,9 @@ public class PacketManager
     {
         ushort count = 0;
         ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
-        count += 2;
+        count += sizeof(ushort);
         ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
-        count += 2;
+        count += sizeof(ushort);
         
         Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
         if (_makeFunc.TryGetValue(id, out func))

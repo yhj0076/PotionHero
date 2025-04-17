@@ -18,8 +18,8 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketType.S_BroadcastGainedDmg, MakePacket<S_BroadcastGainedDmg>);
-        _handler.Add((ushort)PacketType.S_BroadcastGainedDmg, PacketHandler.S_BroadcastGainedDmgHandler);
+        _makeFunc.Add((ushort)PacketType.S_Ping, MakePacket<S_Ping>);
+        _handler.Add((ushort)PacketType.S_Ping, PacketHandler.S_PingHandler);
 
     }
 
