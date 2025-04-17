@@ -28,7 +28,7 @@ public class ClientSession : PacketSession
 
     public override void OnDisconnected(EndPoint endPoint)
     {
-        Console.WriteLine($"Disconnecting from {endPoint}");
+        // Console.WriteLine($"Disconnecting from {endPoint}");
         SessionManager.Instance.Remove(this);
         if (Room != null)
         {
@@ -42,7 +42,7 @@ public class ClientSession : PacketSession
 
     public override void OnRecvPacket(ArraySegment<byte> buffer)
     {
-        Console.WriteLine("OnRecvPacket");
+        // Console.WriteLine("OnRecvPacket");
         PacketManager.Instance.OnRecvPacket(this, buffer);
     }
 }
