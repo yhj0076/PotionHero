@@ -38,7 +38,6 @@ public class GameRoom : IJobQueue
         
         S_Ping ping = new S_Ping();
         ping.ping = 0;
-        //session.Send(ping.Write());
     }
 
     public void Leave(ClientSession session)
