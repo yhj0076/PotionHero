@@ -17,8 +17,7 @@ public interface IPacket
 
 public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
 {
-    public int hostGainedDmg;
-	public int guestGainedDmg;
+    public int gainedDmg;
     
     public ushort Protocol { get { return (ushort)PacketType.S_BroadcastGainedDmg; } }
     
@@ -28,8 +27,7 @@ public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.hostGainedDmg = ReadBytes(buffer, ref count, this.hostGainedDmg);
-		this.guestGainedDmg = ReadBytes(buffer, ref count, this.guestGainedDmg);
+        this.gainedDmg = ReadBytes(buffer, ref count, this.gainedDmg);
     }
 
     public ArraySegment<byte> Write()
@@ -43,8 +41,7 @@ public class S_BroadcastGainedDmg : ByteControlHelper, IPacket
         
         count += sizeof(ushort);
         success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastGainedDmg);
-        success &= WriteBytes(ref buffer, ref count, hostGainedDmg);
-		success &= WriteBytes(ref buffer, ref count, guestGainedDmg);
+        success &= WriteBytes(ref buffer, ref count, gainedDmg);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         

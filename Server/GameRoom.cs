@@ -45,6 +45,6 @@ public class GameRoom : IJobQueue
 
     public void CalcDmg(ClientSession session, C_GainedDmg gainedDmg)
     {
-        
+        session.gainedPower += gainedDmg.gainedDmg;
     }
 }

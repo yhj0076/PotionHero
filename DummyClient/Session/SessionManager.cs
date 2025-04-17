@@ -14,9 +14,11 @@ public class SessionManager
     {
         lock (_lock)
         {
-            foreach (var session in _sessions)
+            foreach (ServerSession session in _sessions)
             {
-                
+                // C_GainedDmg cGainedDmg = new C_GainedDmg();
+                // cGainedDmg.gainedDmg = 10;
+                // session.Send(cGainedDmg.Write());
             }
         }
     }

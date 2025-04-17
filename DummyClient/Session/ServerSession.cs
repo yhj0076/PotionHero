@@ -12,7 +12,8 @@ public class ServerSession : PacketSession
 
     public override void OnSend(int numOfBytes)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        Console.WriteLine($"Sending {numOfBytes} bytes");
     }
 
     public override void OnDisconnected(EndPoint endPoint)
