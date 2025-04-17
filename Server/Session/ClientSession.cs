@@ -14,18 +14,19 @@ public class ClientSession : PacketSession
     
     public override void OnConnected(EndPoint endPoint)
     {
-        Console.WriteLine($"Connected to {endPoint}");
+        Console.WriteLine($"Session : Connected to {endPoint}");
         
         Program._room.Push(() => Program._room.Enter(this));
     }
 
     public override void OnSend(int numOfBytes)
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
     }
 
     public override void OnDisconnected(EndPoint endPoint)
     {
+        Console.WriteLine($"Disconnecting from {endPoint}");
         SessionManager.Instance.Remove(this);
         if (Room != null)
         {
@@ -39,6 +40,7 @@ public class ClientSession : PacketSession
 
     public override void OnRecvPacket(ArraySegment<byte> buffer)
     {
+        Console.WriteLine("OnRecvPacket");
         PacketManager.Instance.OnRecvPacket(this, buffer);
     }
 }
