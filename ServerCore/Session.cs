@@ -209,7 +209,7 @@ public abstract class Session
                 }
 
                 // 컨텐츠 쪽으로 데이터를 넘겨주고 얼마나 처리했는지 받는다
-                int processLen = OnRecv(_recvBuffer.RecvSegment);
+                int processLen = OnRecv(_recvBuffer.DataSegment);
                 if (processLen < 0 || _recvBuffer.DataSize < processLen)
                 {
                     // Console.WriteLine($"OnRecvCompleted Failed : {_recvBuffer.DataSize} < processLen");
