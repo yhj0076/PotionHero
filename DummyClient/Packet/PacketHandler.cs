@@ -10,12 +10,14 @@ public class PacketHandler
     {
         S_JoinGameRoom joinGameRoom = packet as S_JoinGameRoom;
         ServerSession serverSession = session as ServerSession;
+        Console.WriteLine($"Enemy exist : {joinGameRoom.EnemyIsExist}");
     }
 
     public static void S_BroadcastGameStartHandler(PacketSession session, IPacket packet)
     {
         S_BroadcastGameStart broadcastGameStart = packet as S_BroadcastGameStart;
         ServerSession serverSession = session as ServerSession;
+        Console.WriteLine("Game Start!");
     }
 
     public static void S_BroadcastEndGameHandler(PacketSession session, IPacket packet)
