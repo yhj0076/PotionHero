@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PacketLauncher>
-    <packet name="S_Ping">
-        <int name="ping"/>
+    <packet name="S_JoinGameRoom">
     </packet>
-    <packet name="C_Pong">
-        <int name="pong"/>
+    <packet name="C_LeaveGame">
+    </packet>
+    <packet name="C_GainedDmg">
+        <int name="gainedDmg"/>
+    </packet>
+    <packet name="S_AttackResult">
+        <int name="HostHp"/>
+        <int name="GuestHp"/>
+    </packet>
+    <packet name="S_BroadCastGainedDmg">
+        <int name="HostGainedDmg"/>
+        <int name="GuestGainedDmg"/>
     </packet>
 </PacketLauncher>
