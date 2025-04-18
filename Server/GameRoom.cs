@@ -80,5 +80,27 @@ public class GameRoom : IJobQueue
         Broadcast(gainedDmg.Write());
     }
 
-    
+    public void Attack()
+    {
+        int hostDmg = _hostSession.gainedDmg;
+        int guestDmg = _guestSession.gainedDmg;
+
+        int dmg = hostDmg - guestDmg;
+        
+        if (dmg > 0)
+        {
+            _guestSession.hp -= dmg;
+        }
+        else if (dmg < 0)
+        {
+            _hostSession.hp -= dmg;
+        }
+
+        S_AttackResult attackResult = new S_AttackResult();
+        attackResult.HostHp = _hostSession.hp;
+        attackResult.GuestHp = _guestSession.hp;
+        _hostSession.gainedDmg = 0;
+        _guestSession.gainedDmg = 0;
+        Broadcast(attackResult.Write());
+    }
 }
