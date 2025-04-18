@@ -8,7 +8,8 @@ public class ClientSession : PacketSession
 {
     public int SessionId { get; set; }
     public GameRoom Room { get; set; }
-    public int pong { get; set; }
+    public int hp { get; set; }
+    public int gainedDmg { get; set; }
     
     public override void OnConnected(EndPoint endPoint)
     {
@@ -23,7 +24,6 @@ public class ClientSession : PacketSession
     public override void OnSend(int numOfBytes)
     {
         // throw new NotImplementedException();
-        //Room.StartHeartbeat(this);
     }
 
     public override void OnDisconnected(EndPoint endPoint)

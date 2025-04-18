@@ -1,12 +1,12 @@
-﻿using Server.Packet;
-using Server.Session;
+﻿using Server.Session;
 using ServerCore;
 
 namespace Server;
 
 public class GameRoom : IJobQueue
 {
-    List<ClientSession> _clientSessions = new List<ClientSession>();
+    ClientSession? _hostSession = null;
+    ClientSession? _guestSession = null;
     JobQueue _jobQueue = new JobQueue();
     List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
     
@@ -17,11 +17,11 @@ public class GameRoom : IJobQueue
 
     public void Flush()
     {
-        foreach (var session in _clientSessions)
-        {
-            session.Send(_pendingList);
-        }
-        
+        if (_hostSession != null)
+            _hostSession.Send(_pendingList);
+        if (_guestSession != null)
+            _guestSession.Send(_pendingList);
+
         _pendingList.Clear();
     }
 
@@ -32,25 +32,53 @@ public class GameRoom : IJobQueue
 
     public void Enter(ClientSession session)
     {
+        session.hp = 50;
+        bool enemyIsExist = false;
         // 플레이어 추가
-        _clientSessions.Add(session);
+        if (_hostSession == null)
+        {
+            _hostSession = session;
+            if (_guestSession != null)
+                enemyIsExist = true;
+        }
+        else if (_guestSession == null)
+        {
+            _guestSession = session;
+            if (_hostSession != null)
+                enemyIsExist = true;
+        }
         session.Room = this;
         
-        S_Ping ping = new S_Ping();
-        ping.ping = 0;
+        S_JoinGameRoom joinGameRoom = new S_JoinGameRoom();
+        joinGameRoom.EnemyIsExist = enemyIsExist;
+        Broadcast(joinGameRoom.Write());
     }
 
     public void Leave(ClientSession session)
     {
         // 플레이어 제거
-        _clientSessions.Remove(session);
+        if (_hostSession == session)
+        {
+            _hostSession = null;
+        }
+        else if (_guestSession == session)
+        {
+            _guestSession = null;
+        }
+        
+        S_BroadcastLeaveGame leaveGame = new S_BroadcastLeaveGame();
+        Broadcast(leaveGame.Write());
     }
 
-    public void Ping(ClientSession session, int pong)
+    public void GainDmg(ClientSession clientSession, C_GainedDmg cGainedDmg)
     {
-        session.pong = pong;
-        S_Ping ping = new S_Ping();
-        ping.ping = session.pong+1;
-        Broadcast(ping.Write());
+        clientSession.gainedDmg += cGainedDmg.gainedDmg;
+        
+        S_BroadCastGainedDmg gainedDmg = new S_BroadCastGainedDmg();
+        gainedDmg.HostGainedDmg = _hostSession.gainedDmg;
+        gainedDmg.GuestGainedDmg = _guestSession.gainedDmg;
+        Broadcast(gainedDmg.Write());
     }
+
+    
 }

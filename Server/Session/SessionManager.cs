@@ -24,7 +24,7 @@ public class SessionManager
             return session;
         }
     }
-
+    
     public ClientSession Find(int id)
     {
         lock (_lock)

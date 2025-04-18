@@ -18,8 +18,18 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketType.S_Ping, MakePacket<S_Ping>);
-        _handler.Add((ushort)PacketType.S_Ping, PacketHandler.S_PingHandler);
+        _makeFunc.Add((ushort)PacketType.S_JoinGameRoom, MakePacket<S_JoinGameRoom>);
+        _handler.Add((ushort)PacketType.S_JoinGameRoom, PacketHandler.S_JoinGameRoomHandler);
+        _makeFunc.Add((ushort)PacketType.S_BroadcastGameStart, MakePacket<S_BroadcastGameStart>);
+        _handler.Add((ushort)PacketType.S_BroadcastGameStart, PacketHandler.S_BroadcastGameStartHandler);
+        _makeFunc.Add((ushort)PacketType.S_BroadcastEndGame, MakePacket<S_BroadcastEndGame>);
+        _handler.Add((ushort)PacketType.S_BroadcastEndGame, PacketHandler.S_BroadcastEndGameHandler);
+        _makeFunc.Add((ushort)PacketType.S_BroadcastLeaveGame, MakePacket<S_BroadcastLeaveGame>);
+        _handler.Add((ushort)PacketType.S_BroadcastLeaveGame, PacketHandler.S_BroadcastLeaveGameHandler);
+        _makeFunc.Add((ushort)PacketType.S_AttackResult, MakePacket<S_AttackResult>);
+        _handler.Add((ushort)PacketType.S_AttackResult, PacketHandler.S_AttackResultHandler);
+        _makeFunc.Add((ushort)PacketType.S_BroadCastGainedDmg, MakePacket<S_BroadCastGainedDmg>);
+        _handler.Add((ushort)PacketType.S_BroadCastGainedDmg, PacketHandler.S_BroadCastGainedDmgHandler);
 
     }
 

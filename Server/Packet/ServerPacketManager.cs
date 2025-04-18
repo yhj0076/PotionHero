@@ -18,9 +18,10 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketType.C_Pong, MakePacket<C_Pong>);
-        _handler.Add((ushort)PacketType.C_Pong, PacketHandler.C_PongHandler);
-
+        _makeFunc.Add((ushort)PacketType.C_LeaveGame, MakePacket<C_LeaveGame>);
+        _handler.Add((ushort)PacketType.C_LeaveGame, PacketHandler.C_LeaveGameHandler);
+        _makeFunc.Add((ushort)PacketType.C_GainedDmg, MakePacket<C_GainedDmg>);
+        _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)

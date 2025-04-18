@@ -9,34 +9,22 @@ public class SessionManager
     
     List<ServerSession> _sessions = new List<ServerSession>();
     object _lock = new object();
-
+    Random _random = new Random();
+    
     public void SendForEach()
     {
         lock (_lock)
         {
-            foreach (ServerSession session in _sessions)
+            for (int i = 0; i < 2; i++)
             {
-                C_Pong packet = new C_Pong();
-                packet.pong = 1;
-                session.Send(packet.Write());
+                C_GainedDmg cGainedDmg = new C_GainedDmg();
+                cGainedDmg.gainedDmg = _random.Next(3,10);
+                _sessions[0].Send(cGainedDmg.Write());
             }
-        }
-    }
-
-    public void Send()
-    {
-        lock (_lock)
-        {
-            if (_sessions.Count > 0)
-            {
-                C_Pong pong = new C_Pong();
-                pong.pong = 1;
-                _sessions[0].Send(pong.Write());
-            }
-            else
-            {
-                Console.WriteLine("No sessions left");
-            }
+            
+            C_GainedDmg cGainedDmg1 = new C_GainedDmg();
+            cGainedDmg1.gainedDmg = _random.Next(3,10);
+            _sessions[1].Send(cGainedDmg1.Write());
         }
     }
 

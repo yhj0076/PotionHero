@@ -1,10 +1,16 @@
-using Server.Utility;
 using ServerCore;
+using ServerCore.Utility;
 
 public enum PacketType
 {
-    S_Ping = 1,
-	C_Pong = 2,
+    S_JoinGameRoom = 1,
+	S_BroadcastGameStart = 2,
+	S_BroadcastEndGame = 3,
+	C_LeaveGame = 4,
+	S_BroadcastLeaveGame = 5,
+	C_GainedDmg = 6,
+	S_AttackResult = 7,
+	S_BroadCastGainedDmg = 8,
 	
 }
 
@@ -15,11 +21,11 @@ public interface IPacket
     ArraySegment<byte> Write();
 }
 
-public class S_Ping : ByteControlHelper, IPacket
+public class S_JoinGameRoom : ByteControlHelper, IPacket
 {
-    public int ping;
+    public bool EnemyIsExist;
     
-    public ushort Protocol { get { return (ushort)PacketType.S_Ping; } }
+    public ushort Protocol { get { return (ushort)PacketType.S_JoinGameRoom; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -27,7 +33,7 @@ public class S_Ping : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.ping = ReadBytes(buffer, ref count, this.ping);
+        this.EnemyIsExist = ReadBytes(buffer, ref count, this.EnemyIsExist);
     }
 
     public ArraySegment<byte> Write()
@@ -40,8 +46,8 @@ public class S_Ping : ByteControlHelper, IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_Ping);
-        success &= WriteBytes(ref buffer, ref count, ping);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_JoinGameRoom);
+        success &= WriteBytes(ref buffer, ref count, EnemyIsExist);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         
@@ -51,11 +57,11 @@ public class S_Ping : ByteControlHelper, IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class C_Pong : ByteControlHelper, IPacket
+public class S_BroadcastGameStart : ByteControlHelper, IPacket
 {
-    public int pong;
     
-    public ushort Protocol { get { return (ushort)PacketType.C_Pong; } }
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastGameStart; } }
     
     public void Read(ArraySegment<byte> segment)
     {
@@ -63,7 +69,7 @@ public class C_Pong : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.pong = ReadBytes(buffer, ref count, this.pong);
+        
     }
 
     public ArraySegment<byte> Write()
@@ -76,8 +82,228 @@ public class C_Pong : ByteControlHelper, IPacket
         Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
         
         count += sizeof(ushort);
-        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_Pong);
-        success &= WriteBytes(ref buffer, ref count, pong);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastGameStart);
+        
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class S_BroadcastEndGame : ByteControlHelper, IPacket
+{
+    
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastEndGame; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastEndGame);
+        
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class C_LeaveGame : ByteControlHelper, IPacket
+{
+    public ushort Protocol { get { return (ushort)PacketType.C_LeaveGame; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_LeaveGame);
+        
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class S_BroadcastLeaveGame : ByteControlHelper, IPacket
+{
+    
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_BroadcastLeaveGame; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastLeaveGame);
+        
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class C_GainedDmg : ByteControlHelper, IPacket
+{
+    public int gainedDmg;
+    
+    public ushort Protocol { get { return (ushort)PacketType.C_GainedDmg; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.gainedDmg = ReadBytes(buffer, ref count, this.gainedDmg);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_GainedDmg);
+        success &= WriteBytes(ref buffer, ref count, gainedDmg);
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class S_AttackResult : ByteControlHelper, IPacket
+{
+    public int HostHp;
+	public int GuestHp;
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_AttackResult; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.HostHp = ReadBytes(buffer, ref count, this.HostHp);
+		this.GuestHp = ReadBytes(buffer, ref count, this.GuestHp);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_AttackResult);
+        success &= WriteBytes(ref buffer, ref count, HostHp);
+		success &= WriteBytes(ref buffer, ref count, GuestHp);
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class S_BroadCastGainedDmg : ByteControlHelper, IPacket
+{
+    public int HostGainedDmg;
+	public int GuestGainedDmg;
+    
+    public ushort Protocol { get { return (ushort)PacketType.S_BroadCastGainedDmg; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        this.HostGainedDmg = ReadBytes(buffer, ref count, this.HostGainedDmg);
+		this.GuestGainedDmg = ReadBytes(buffer, ref count, this.GuestGainedDmg);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadCastGainedDmg);
+        success &= WriteBytes(ref buffer, ref count, HostGainedDmg);
+		success &= WriteBytes(ref buffer, ref count, GuestGainedDmg);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         

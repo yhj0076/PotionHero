@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PacketLauncher>
     <packet name="S_JoinGameRoom">
+        <bool name="EnemyIsExist"/>
+    </packet>
+    <packet name="S_BroadcastGameStart">
+    </packet>
+    <packet name="S_BroadcastEndGame">
     </packet>
     <packet name="C_LeaveGame">
+    </packet>
+    <packet name="S_BroadcastLeaveGame">
     </packet>
     <packet name="C_GainedDmg">
         <int name="gainedDmg"/>

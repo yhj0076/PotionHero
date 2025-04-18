@@ -70,8 +70,8 @@ public class PacketManager
     // {0} 패킷 이름/ 번호 목록
     // {1} 패킷 목록
     public static string fileFormat =
-        @"using Server.Utility;
-using ServerCore;
+        @"using ServerCore;
+using ServerCore.Utility;
 
 public enum PacketType
 {{
