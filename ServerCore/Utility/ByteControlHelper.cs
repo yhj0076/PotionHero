@@ -1,6 +1,4 @@
-﻿using Server.Exception;
-
-namespace Server.Utility;
+﻿namespace ServerCore.Utility;
 
 public class ByteControlHelper
 {
