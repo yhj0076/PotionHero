@@ -23,7 +23,10 @@ public class ClientSession : PacketSession
 
     public override void OnSend(int numOfBytes)
     {
-        // throw new NotImplementedException();
+        Program._room.Push(() =>
+        {
+            Program._room.Attack();
+        });
     }
 
     public override void OnDisconnected(EndPoint endPoint)

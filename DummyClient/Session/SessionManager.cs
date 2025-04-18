@@ -15,12 +15,10 @@ public class SessionManager
     {
         lock (_lock)
         {
-            for (int i = 0; i < 2; i++)
-            {
-                C_GainedDmg cGainedDmg = new C_GainedDmg();
-                cGainedDmg.gainedDmg = _random.Next(3,10);
-                _sessions[0].Send(cGainedDmg.Write());
-            }
+            C_GainedDmg cGainedDmg = new C_GainedDmg();
+            cGainedDmg.gainedDmg = _random.Next(3,10);
+            _sessions[0].Send(cGainedDmg.Write());
+            
             
             C_GainedDmg cGainedDmg1 = new C_GainedDmg();
             cGainedDmg1.gainedDmg = _random.Next(3,10);
@@ -28,6 +26,16 @@ public class SessionManager
         }
     }
 
+    public void SendTimeStop()
+    {
+        lock (_lock)
+        {
+            C_TimeUp cTimeUp = new C_TimeUp();
+            _sessions[1].Send(cTimeUp.Write());
+            _sessions[0].Send(cTimeUp.Write());
+        }
+    }
+    
     public ServerSession Generate()
     {
         lock (_lock)

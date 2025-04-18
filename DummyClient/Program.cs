@@ -20,18 +20,25 @@ class Program
             return SessionManager.Instance.Generate();
         },2);
 
+        float timeCount = 0;
         while (true)
         {
             try
             {
                 SessionManager.Instance.SendForEach();
+                if (timeCount > 15)
+                {
+                    SessionManager.Instance.SendTimeStop();
+                    timeCount = 0;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-            
-            Thread.Sleep(250);
+
+            timeCount += 1f;
+            Thread.Sleep(1000);
         }
     }
 }

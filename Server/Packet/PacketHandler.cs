@@ -33,4 +33,15 @@ public class PacketHandler
             gameRoom.GainDmg(clientSession, cGainedDmg);
         });
     }
+
+    public static void C_TimeUpHandler(PacketSession session, IPacket packet)
+    {
+        ClientSession clientSession = session as ClientSession;
+        
+        GameRoom gameRoom = clientSession.Room;
+        gameRoom.Push(() =>
+        {
+            gameRoom.Stop(clientSession);
+        });
+    }
 }

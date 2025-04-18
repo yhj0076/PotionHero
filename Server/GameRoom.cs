@@ -10,6 +10,11 @@ public class GameRoom : IJobQueue
     JobQueue _jobQueue = new JobQueue();
     List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
     
+    private int hostGainedDmg = 0;
+    private bool hostStopGain = false;
+    private int guestGainedDmg = 0;
+    private bool guestStopGain = false;
+    
     public void Push(Action job)
     {
         _jobQueue.Push(job);
@@ -80,27 +85,50 @@ public class GameRoom : IJobQueue
         Broadcast(gainedDmg.Write());
     }
 
+    
+    //둘 다한테서 정지신호를 받았을 때 공걱 계산하기
+    public void Stop(ClientSession session)
+    {
+        if (_hostSession == session)
+        {
+            hostStopGain = true;
+            hostGainedDmg = session.gainedDmg;
+            session.gainedDmg = 0;
+        }
+        else if(_guestSession == session)
+        {
+            guestStopGain = true;
+            guestGainedDmg = session.gainedDmg;
+            session.gainedDmg = 0;
+        }
+    }
+    
     public void Attack()
     {
-        int hostDmg = _hostSession.gainedDmg;
-        int guestDmg = _guestSession.gainedDmg;
-
-        int dmg = hostDmg - guestDmg;
-        
-        if (dmg > 0)
+        if (hostStopGain && guestStopGain)
         {
-            _guestSession.hp -= dmg;
-        }
-        else if (dmg < 0)
-        {
-            _hostSession.hp -= dmg;
-        }
+            int hostDmg = hostGainedDmg;
+            int guestDmg = guestGainedDmg;
 
-        S_AttackResult attackResult = new S_AttackResult();
-        attackResult.HostHp = _hostSession.hp;
-        attackResult.GuestHp = _guestSession.hp;
-        _hostSession.gainedDmg = 0;
-        _guestSession.gainedDmg = 0;
-        Broadcast(attackResult.Write());
+            int dmg = hostDmg - guestDmg;
+
+            if (dmg > 0)
+            {
+                _guestSession.hp -= dmg;
+            }
+            else if (dmg < 0)
+            {
+                _hostSession.hp -= -dmg;
+            }
+
+            S_AttackResult attackResult = new S_AttackResult();
+            attackResult.HostHp = _hostSession.hp;
+            attackResult.GuestHp = _guestSession.hp;
+            _hostSession.gainedDmg = 0;
+            _guestSession.gainedDmg = 0;
+            Broadcast(attackResult.Write());
+            hostStopGain = false;
+            guestStopGain = false;
+        }
     }
 }

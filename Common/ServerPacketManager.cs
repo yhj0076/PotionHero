@@ -22,6 +22,8 @@ public class PacketManager
         _handler.Add((ushort)PacketType.C_LeaveGame, PacketHandler.C_LeaveGameHandler);
         _makeFunc.Add((ushort)PacketType.C_GainedDmg, MakePacket<C_GainedDmg>);
         _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
+        _makeFunc.Add((ushort)PacketType.C_TimeUp, MakePacket<C_TimeUp>);
+        _handler.Add((ushort)PacketType.C_TimeUp, PacketHandler.C_TimeUpHandler);
 
     }
 
