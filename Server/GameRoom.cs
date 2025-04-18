@@ -8,8 +8,10 @@ public class GameRoom : IJobQueue
     ClientSession? _hostSession = null;
     ClientSession? _guestSession = null;
     JobQueue _jobQueue = new JobQueue();
-    List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
-    
+    List<ArraySegment<byte>> _pendingListH = new List<ArraySegment<byte>>();
+    List<ArraySegment<byte>> _pendingListG = new List<ArraySegment<byte>>();
+
+    private bool GameStart = false;
     private int hostGainedDmg = 0;
     private bool hostStopGain = false;
     private int guestGainedDmg = 0;
@@ -28,16 +30,18 @@ public class GameRoom : IJobQueue
     public void Flush()
     {
         if (_hostSession != null)
-            _hostSession.Send(_pendingList);
+            _hostSession.Send(_pendingListH);
         if (_guestSession != null)
-            _guestSession.Send(_pendingList);
+            _guestSession.Send(_pendingListG);
 
-        _pendingList.Clear();
+        _pendingListH.Clear();
+        _pendingListG.Clear();
     }
 
     public void Broadcast(ArraySegment<byte> segment)
     {
-        _pendingList.Add(segment);
+        _pendingListH.Add(segment);
+        _pendingListG.Add(segment);
     }
 
     public void Enter(ClientSession session)
@@ -64,6 +68,16 @@ public class GameRoom : IJobQueue
         Broadcast(joinGameRoom.Write());
     }
 
+    public void Start()
+    {
+        if (_hostSession != null && _guestSession != null && !GameStart)
+        {
+            GameStart = true;
+            S_BroadcastGameStart broadcastGameStart = new S_BroadcastGameStart();
+            Broadcast(broadcastGameStart.Write());
+        }
+    }
+    
     public void Leave(ClientSession session)
     {
         // 플레이어 제거
@@ -82,12 +96,20 @@ public class GameRoom : IJobQueue
 
     public void GainDmg(ClientSession clientSession, C_GainedDmg cGainedDmg)
     {
-        clientSession.gainedDmg += cGainedDmg.gainedDmg;
-        
-        S_BroadCastGainedDmg gainedDmg = new S_BroadCastGainedDmg();
-        gainedDmg.HostGainedDmg = _hostSession.gainedDmg;
-        gainedDmg.GuestGainedDmg = _guestSession.gainedDmg;
-        Broadcast(gainedDmg.Write());
+        if (_hostSession != null && _guestSession != null)
+        {
+            clientSession.gainedDmg += cGainedDmg.gainedDmg;
+
+            S_BroadCastGainedDmg gainedDmgH = new S_BroadCastGainedDmg();
+            gainedDmgH.HostGainedDmg = _hostSession.gainedDmg;
+            gainedDmgH.GuestGainedDmg = _guestSession.gainedDmg;
+            S_BroadCastGainedDmg gainedDmgG = new S_BroadCastGainedDmg();
+            gainedDmgG.HostGainedDmg = _guestSession.gainedDmg;
+            gainedDmgG.GuestGainedDmg = _hostSession.gainedDmg;
+            // Broadcast(gainedDmg.Write());
+            _pendingListH.Add(gainedDmgH.Write());
+            _pendingListG.Add(gainedDmgG.Write());
+        }
     }
 
     
@@ -128,12 +150,18 @@ public class GameRoom : IJobQueue
                     _hostSession.hp -= -dmg;
                 }
 
-                S_AttackResult attackResult = new S_AttackResult();
-                attackResult.HostHp = _hostSession.hp;
-                attackResult.GuestHp = _guestSession.hp;
+                S_AttackResult attackResultH = new S_AttackResult();
+                attackResultH.HostHp = _hostSession.hp;
+                attackResultH.GuestHp = _guestSession.hp;
+                S_AttackResult attackResultG = new S_AttackResult();
+                attackResultG.HostHp = _guestSession.hp;
+                attackResultG.GuestHp = _hostSession.hp;
                 _hostSession.gainedDmg = 0;
                 _guestSession.gainedDmg = 0;
-                Broadcast(attackResult.Write());
+                // _hostSession.Send(attackResultH.Write());
+                // _guestSession.Send(attackResultG.Write());
+                _pendingListH.Add(attackResultH.Write());
+                _pendingListG.Add(attackResultG.Write());
                 hostStopGain = false;
                 guestStopGain = false;
             }
