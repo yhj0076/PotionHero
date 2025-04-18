@@ -11,6 +11,11 @@ public class JobQueue : IJobQueue
     object _lock = new object();
     private bool _flush = false;
 
+    public void Clear()
+    {
+        _jobQueue.Clear();
+    }
+    
     public void Push(Action job)
     {
         bool flush = false;

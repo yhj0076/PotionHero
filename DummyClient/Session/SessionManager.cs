@@ -21,7 +21,7 @@ public class SessionManager
             
             
             C_GainedDmg cGainedDmg1 = new C_GainedDmg();
-            cGainedDmg1.gainedDmg = _random.Next(3,10);
+            cGainedDmg1.gainedDmg = _random.Next(10,15);
             _sessions[1].Send(cGainedDmg1.Write());
         }
     }

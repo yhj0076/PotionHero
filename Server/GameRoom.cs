@@ -20,6 +20,11 @@ public class GameRoom : IJobQueue
         _jobQueue.Push(job);
     }
 
+    public void Clear()
+    {
+        _jobQueue.Clear();
+    }
+    
     public void Flush()
     {
         if (_hostSession != null)
@@ -105,30 +110,52 @@ public class GameRoom : IJobQueue
     
     public void Attack()
     {
-        if (hostStopGain && guestStopGain)
+        if (_hostSession != null && _guestSession != null)
         {
-            int hostDmg = hostGainedDmg;
-            int guestDmg = guestGainedDmg;
-
-            int dmg = hostDmg - guestDmg;
-
-            if (dmg > 0)
+            if (hostStopGain && guestStopGain)
             {
-                _guestSession.hp -= dmg;
-            }
-            else if (dmg < 0)
-            {
-                _hostSession.hp -= -dmg;
+                int hostDmg = hostGainedDmg;
+                int guestDmg = guestGainedDmg;
+
+                int dmg = hostDmg - guestDmg;
+
+                if (dmg > 0)
+                {
+                    _guestSession.hp -= dmg;
+                }
+                else if (dmg < 0)
+                {
+                    _hostSession.hp -= -dmg;
+                }
+
+                S_AttackResult attackResult = new S_AttackResult();
+                attackResult.HostHp = _hostSession.hp;
+                attackResult.GuestHp = _guestSession.hp;
+                _hostSession.gainedDmg = 0;
+                _guestSession.gainedDmg = 0;
+                Broadcast(attackResult.Write());
+                hostStopGain = false;
+                guestStopGain = false;
             }
 
-            S_AttackResult attackResult = new S_AttackResult();
-            attackResult.HostHp = _hostSession.hp;
-            attackResult.GuestHp = _guestSession.hp;
-            _hostSession.gainedDmg = 0;
-            _guestSession.gainedDmg = 0;
-            Broadcast(attackResult.Write());
-            hostStopGain = false;
-            guestStopGain = false;
+            GameEnd();
+        }
+    }
+
+    public void GameEnd()
+    {
+        if (_hostSession.hp <= 0 || _guestSession.hp <= 0)
+        {
+            S_BroadcastEndGame endGame = new S_BroadcastEndGame();
+            if (_hostSession.hp < _guestSession.hp)
+            {
+                endGame.WinnerId = _guestSession.SessionId;
+            }
+            else
+            {
+                endGame.WinnerId = _hostSession.SessionId;
+            }
+            Broadcast(endGame.Write());
         }
     }
 }

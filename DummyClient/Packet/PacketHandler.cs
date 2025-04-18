@@ -22,6 +22,8 @@ public class PacketHandler
     {
         S_BroadcastEndGame endGame = packet as S_BroadcastEndGame;
         ServerSession serverSession = session as ServerSession;
+        Console.WriteLine($"Winner: {endGame.WinnerId}");
+        serverSession.DisConnect();
     }
 
     public static void S_BroadcastLeaveGameHandler(PacketSession session, IPacket packet)
