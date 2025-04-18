@@ -5,7 +5,8 @@ public class PacketFormat
     // {0} 패킷 등록
     // {1} DummyClient or Server
     public static string managerFormat = 
-@"using {1}.Packet;
+@"using System;
+using {1}.Packet;
 using ServerCore;
 
 public class PacketManager
@@ -70,7 +71,8 @@ public class PacketManager
     // {0} 패킷 이름/ 번호 목록
     // {1} 패킷 목록
     public static string fileFormat =
-        @"using ServerCore;
+        @"using System;
+using ServerCore;
 using ServerCore.Utility;
 
 public enum PacketType

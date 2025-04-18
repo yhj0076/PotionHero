@@ -38,9 +38,6 @@ public class PacketHandler
     {
         S_AttackResult attackResult = packet as S_AttackResult;
         ServerSession serverSession = session as ServerSession;
-        Console.WriteLine($"result\n" +
-                          $"host HP : {attackResult.HostHp}\n" +
-                          $"guest HP : {attackResult.GuestHp}");
     }
 
     public static void S_BroadCastGainedDmgHandler(PacketSession session, IPacket packet)

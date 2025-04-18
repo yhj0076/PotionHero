@@ -240,8 +240,7 @@ public class C_GainedDmg : ByteControlHelper, IPacket
 }
 public class S_AttackResult : ByteControlHelper, IPacket
 {
-    public int HostHp;
-	public int GuestHp;
+    public int dmg;
     
     public ushort Protocol { get { return (ushort)PacketType.S_AttackResult; } }
     
@@ -251,8 +250,7 @@ public class S_AttackResult : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.HostHp = ReadBytes(buffer, ref count, this.HostHp);
-		this.GuestHp = ReadBytes(buffer, ref count, this.GuestHp);
+        this.dmg = ReadBytes(buffer, ref count, this.dmg);
     }
 
     public ArraySegment<byte> Write()
@@ -266,8 +264,7 @@ public class S_AttackResult : ByteControlHelper, IPacket
         
         count += sizeof(ushort);
         success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_AttackResult);
-        success &= WriteBytes(ref buffer, ref count, HostHp);
-		success &= WriteBytes(ref buffer, ref count, GuestHp);
+        success &= WriteBytes(ref buffer, ref count, dmg);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         

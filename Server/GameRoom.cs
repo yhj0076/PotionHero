@@ -151,11 +151,9 @@ public class GameRoom : IJobQueue
                 }
 
                 S_AttackResult attackResultH = new S_AttackResult();
-                attackResultH.HostHp = _hostSession.hp;
-                attackResultH.GuestHp = _guestSession.hp;
+                attackResultH.dmg = dmg;
                 S_AttackResult attackResultG = new S_AttackResult();
-                attackResultG.HostHp = _guestSession.hp;
-                attackResultG.GuestHp = _hostSession.hp;
+                attackResultG.dmg = -dmg;
                 _hostSession.gainedDmg = 0;
                 _guestSession.gainedDmg = 0;
                 // _hostSession.Send(attackResultH.Write());

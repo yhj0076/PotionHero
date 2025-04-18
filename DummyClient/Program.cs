@@ -18,7 +18,7 @@ class Program
         connector.Connect(endPoint, () =>
         {
             return SessionManager.Instance.Generate();
-        },2);
+        },1);
 
         float timeCount = 0;
         while (true)

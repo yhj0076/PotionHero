@@ -16,8 +16,7 @@
         <int name="gainedDmg"/>
     </packet>
     <packet name="S_AttackResult">
-        <int name="HostHp"/>
-        <int name="GuestHp"/>
+        <int name="dmg"/>
     </packet>
     <packet name="S_BroadCastGainedDmg">
         <int name="HostGainedDmg"/>
