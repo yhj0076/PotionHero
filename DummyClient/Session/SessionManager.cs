@@ -20,9 +20,9 @@ public class SessionManager
             _sessions[0].Send(cGainedDmg.Write());
             
             
-            C_GainedDmg cGainedDmg1 = new C_GainedDmg();
-            cGainedDmg1.gainedDmg = _random.Next(10,15);
-            _sessions[1].Send(cGainedDmg1.Write());
+            // C_GainedDmg cGainedDmg1 = new C_GainedDmg();
+            // cGainedDmg1.gainedDmg = _random.Next(3,10);
+            // _sessions[1].Send(cGainedDmg1.Write());
         }
     }
 
