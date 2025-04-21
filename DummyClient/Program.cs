@@ -17,10 +17,12 @@ class Program
         Connector connector = new Connector();
         connector.Connect(endPoint, () =>
         {
-            return SessionManager.Instance.Generate();
+            // return SessionManager.Instance.Generate();
+            return SessionManager.Instance.GenerateSingleSession();
         },1);
 
         float timeCount = 0;
+        Thread.Sleep(3000);
         while (true)
         {
             try

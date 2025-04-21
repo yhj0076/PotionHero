@@ -1,4 +1,6 @@
-﻿namespace DummyClient.Session;
+﻿using System.Net;
+
+namespace DummyClient.Session;
 
 public class SessionManager
 {
@@ -8,6 +10,7 @@ public class SessionManager
     #endregion
     
     List<ServerSession> _sessions = new List<ServerSession>();
+    ServerSession _singleSession = new ServerSession();
     object _lock = new object();
     Random _random = new Random();
     
@@ -15,14 +18,16 @@ public class SessionManager
     {
         lock (_lock)
         {
-            C_GainedDmg cGainedDmg = new C_GainedDmg();
-            cGainedDmg.gainedDmg = _random.Next(3,10);
-            _sessions[0].Send(cGainedDmg.Write());
-            
+            // C_GainedDmg cGainedDmg = new C_GainedDmg();
+            // cGainedDmg.gainedDmg = _random.Next(3,10);
+            // _sessions[0].Send(cGainedDmg.Write());
             
             // C_GainedDmg cGainedDmg1 = new C_GainedDmg();
             // cGainedDmg1.gainedDmg = _random.Next(3,10);
             // _sessions[1].Send(cGainedDmg1.Write());
+            C_GainedDmg cGainedDmg = new C_GainedDmg();
+            cGainedDmg.gainedDmg = _random.Next(3,4);
+            _singleSession.Send(cGainedDmg.Write());
         }
     }
 
@@ -31,8 +36,20 @@ public class SessionManager
         lock (_lock)
         {
             C_TimeUp cTimeUp = new C_TimeUp();
-            _sessions[1].Send(cTimeUp.Write());
-            _sessions[0].Send(cTimeUp.Write());
+            // _sessions[1].Send(cTimeUp.Write());
+            // _sessions[0].Send(cTimeUp.Write());
+            _singleSession.Send(cTimeUp.Write());
+        }
+    }
+
+    public ServerSession GenerateSingleSession()
+    {
+        lock (_lock)
+        {
+            ServerSession singleSession = new ServerSession();
+            _singleSession = singleSession;
+            Console.WriteLine("Single session generated");
+            return singleSession;
         }
     }
     

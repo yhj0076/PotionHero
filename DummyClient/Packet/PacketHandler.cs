@@ -38,6 +38,7 @@ public class PacketHandler
     {
         S_AttackResult attackResult = packet as S_AttackResult;
         ServerSession serverSession = session as ServerSession;
+        Console.WriteLine($"attack! : {attackResult.dmg}");
     }
 
     public static void S_BroadCastGainedDmgHandler(PacketSession session, IPacket packet)
