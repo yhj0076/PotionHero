@@ -46,7 +46,7 @@ public class GameRoom : IJobQueue
 
     public void Enter(ClientSession session)
     {
-        session.hp = 50;
+        session.hp = 100;
         bool enemyIsExist = false;
         // 플레이어 추가
         if (_hostSession == null)
@@ -70,9 +70,8 @@ public class GameRoom : IJobQueue
 
     public void Start()
     {
-        if (_hostSession != null && _guestSession != null && !GameStart)
+        if (_hostSession != null && _guestSession != null)
         {
-            GameStart = true;
             S_BroadcastGameStart broadcastGameStart = new S_BroadcastGameStart();
             Broadcast(broadcastGameStart.Write());
         }
@@ -158,8 +157,10 @@ public class GameRoom : IJobQueue
                 _guestSession.gainedDmg = 0;
                 // _hostSession.Send(attackResultH.Write());
                 // _guestSession.Send(attackResultG.Write());
-                _pendingListH.Add(attackResultH.Write());
-                _pendingListG.Add(attackResultG.Write());
+                _hostSession.Send(attackResultH.Write());
+                _guestSession.Send(attackResultG.Write());
+                // _pendingListH.Add(attackResultH.Write());
+                // _pendingListG.Add(attackResultG.Write());
                 hostStopGain = false;
                 guestStopGain = false;
             }
@@ -182,6 +183,14 @@ public class GameRoom : IJobQueue
                 endGame.WinnerId = _hostSession.SessionId;
             }
             Broadcast(endGame.Write());
+        }
+    }
+
+    public void BreakRoom()
+    {
+        if (GameStart && (_hostSession == null || _guestSession == null))
+        {
+            
         }
     }
 }
