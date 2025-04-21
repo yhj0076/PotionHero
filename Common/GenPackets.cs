@@ -1,3 +1,4 @@
+using System;
 using ServerCore;
 using ServerCore.Utility;
 
@@ -12,6 +13,7 @@ public enum PacketType
 	S_AttackResult = 7,
 	S_BroadCastGainedDmg = 8,
 	C_TimeUp = 9,
+	C_JoinedGame = 10,
 	
 }
 
@@ -339,6 +341,42 @@ public class C_TimeUp : ByteControlHelper, IPacket
         
         count += sizeof(ushort);
         success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_TimeUp);
+        
+        
+        success &= BitConverter.TryWriteBytes(buffer, count);
+        
+        if (success == false)
+            return null;
+
+        return SendBufferHelper.Close(count);
+    }
+}
+public class C_JoinedGame : ByteControlHelper, IPacket
+{
+    
+    
+    public ushort Protocol { get { return (ushort)PacketType.C_JoinedGame; } }
+    
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+        ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);    // PacketType만큼 건너뛰기
+        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(8192);
+
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> buffer = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+        
+        count += sizeof(ushort);
+        success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.C_JoinedGame);
         
         
         success &= BitConverter.TryWriteBytes(buffer, count);

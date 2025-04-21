@@ -44,4 +44,15 @@ public class PacketHandler
             gameRoom.Stop(clientSession);
         });
     }
+
+    public static void C_JoinedGameHandler(PacketSession session, IPacket packet)
+    {
+        ClientSession clientSession = session as ClientSession;
+        
+        GameRoom gameRoom = clientSession.Room;
+        gameRoom.Push(() =>
+        {
+            gameRoom.Start();
+        });
+    }
 }

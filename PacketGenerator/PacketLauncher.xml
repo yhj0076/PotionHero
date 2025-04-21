@@ -24,4 +24,6 @@
     </packet>
     <packet name="C_TimeUp">
     </packet>
+    <packet name="C_JoinedGame">
+    </packet>
 </PacketLauncher>

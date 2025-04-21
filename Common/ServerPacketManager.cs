@@ -1,3 +1,4 @@
+using System;
 using Server.Packet;
 using ServerCore;
 
@@ -24,6 +25,8 @@ public class PacketManager
         _handler.Add((ushort)PacketType.C_GainedDmg, PacketHandler.C_GainedDmgHandler);
         _makeFunc.Add((ushort)PacketType.C_TimeUp, MakePacket<C_TimeUp>);
         _handler.Add((ushort)PacketType.C_TimeUp, PacketHandler.C_TimeUpHandler);
+        _makeFunc.Add((ushort)PacketType.C_JoinedGame, MakePacket<C_JoinedGame>);
+        _handler.Add((ushort)PacketType.C_JoinedGame, PacketHandler.C_JoinedGameHandler);
 
     }
 

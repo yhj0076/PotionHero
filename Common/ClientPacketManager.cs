@@ -1,3 +1,4 @@
+using System;
 using DummyClient.Packet;
 using ServerCore;
 
