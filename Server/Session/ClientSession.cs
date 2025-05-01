@@ -18,15 +18,16 @@ public class ClientSession : PacketSession
         Program._room.Push(() =>
         {
             Program._room.Enter(this);
+            Program._room.TickTock();
         });
     }
 
     public override void OnSend(int numOfBytes)
     {
-        Program._room.Push(() =>
-        {
-            Program._room.Attack();
-        });
+        // Program._room.Push(() =>
+        // {
+        //     Program._room.TickTock();
+        // });
     }
 
     public override void OnDisconnected(EndPoint endPoint)

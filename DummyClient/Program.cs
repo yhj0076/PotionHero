@@ -28,11 +28,6 @@ class Program
             try
             {
                 SessionManager.Instance.SendForEach();
-                if (timeCount > 15)
-                {
-                    SessionManager.Instance.SendTimeStop();
-                    timeCount = 0;
-                }
             }
             catch (Exception e)
             {

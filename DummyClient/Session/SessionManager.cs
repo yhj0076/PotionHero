@@ -31,17 +31,6 @@ public class SessionManager
         }
     }
 
-    public void SendTimeStop()
-    {
-        lock (_lock)
-        {
-            C_TimeUp cTimeUp = new C_TimeUp();
-            // _sessions[1].Send(cTimeUp.Write());
-            // _sessions[0].Send(cTimeUp.Write());
-            _singleSession.Send(cTimeUp.Write());
-        }
-    }
-
     public ServerSession GenerateSingleSession()
     {
         lock (_lock)

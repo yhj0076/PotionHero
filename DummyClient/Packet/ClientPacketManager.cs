@@ -31,6 +31,8 @@ public class PacketManager
         _handler.Add((ushort)PacketType.S_AttackResult, PacketHandler.S_AttackResultHandler);
         _makeFunc.Add((ushort)PacketType.S_BroadCastGainedDmg, MakePacket<S_BroadCastGainedDmg>);
         _handler.Add((ushort)PacketType.S_BroadCastGainedDmg, PacketHandler.S_BroadCastGainedDmgHandler);
+        _makeFunc.Add((ushort)PacketType.S_Timer, MakePacket<S_Timer>);
+        _handler.Add((ushort)PacketType.S_Timer, PacketHandler.S_TimerHandler);
 
     }
 

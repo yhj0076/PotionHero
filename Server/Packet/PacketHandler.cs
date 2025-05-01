@@ -36,13 +36,13 @@ public class PacketHandler
 
     public static void C_TimeUpHandler(PacketSession session, IPacket packet)
     {
-        ClientSession clientSession = session as ClientSession;
-        
-        GameRoom gameRoom = clientSession.Room;
-        gameRoom.Push(() =>
-        {
-            gameRoom.Stop(clientSession);
-        });
+        // ClientSession clientSession = session as ClientSession;
+        //
+        // GameRoom gameRoom = clientSession.Room;
+        // gameRoom.Push(() =>
+        // {
+        //     gameRoom.Stop(clientSession);
+        // });
     }
 
     public static void C_JoinedGameHandler(PacketSession session, IPacket packet)

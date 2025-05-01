@@ -1,5 +1,6 @@
 ﻿using Server.Session;
 using ServerCore;
+using Timer = System.Timers.Timer;
 
 namespace Server;
 
@@ -12,10 +13,9 @@ public class GameRoom : IJobQueue
     List<ArraySegment<byte>> _pendingListG = new List<ArraySegment<byte>>();
 
     private bool GameStart = false;
-    private int hostGainedDmg = 0;
-    private bool hostStopGain = false;
-    private int guestGainedDmg = 0;
-    private bool guestStopGain = false;
+    private int gameTime = 15;
+    private System.Timers.Timer timer;
+    object _lock = new object();
     
     public void Push(Action job)
     {
@@ -110,65 +110,34 @@ public class GameRoom : IJobQueue
             _pendingListG.Add(gainedDmgG.Write());
         }
     }
-
     
-    //둘 다한테서 정지신호를 받았을 때 공걱 계산하기
-    public void Stop(ClientSession session)
-    {
-        if (_hostSession == session)
-        {
-            hostStopGain = true;
-            hostGainedDmg = session.gainedDmg;
-            session.gainedDmg = 0;
-        }
-        else if(_guestSession == session)
-        {
-            guestStopGain = true;
-            guestGainedDmg = session.gainedDmg;
-            session.gainedDmg = 0;
-        }
-    }
-    
+    // 공격 메서드
     public void Attack()
     {
         if (_hostSession != null && _guestSession != null)
         {
-            if (hostStopGain && guestStopGain)
+            int dmg = _hostSession.gainedDmg - _guestSession.gainedDmg;
+            if (dmg > 0)
             {
-                int hostDmg = hostGainedDmg;
-                int guestDmg = guestGainedDmg;
-
-                int dmg = hostDmg - guestDmg;
-
-                if (dmg > 0)
-                {
-                    _guestSession.hp -= dmg;
-                }
-                else if (dmg < 0)
-                {
-                    _hostSession.hp -= -dmg;
-                }
-
-                S_AttackResult attackResultH = new S_AttackResult();
-                attackResultH.dmg = dmg;
-                S_AttackResult attackResultG = new S_AttackResult();
-                attackResultG.dmg = -dmg;
-                _hostSession.gainedDmg = 0;
-                _guestSession.gainedDmg = 0;
-                // _hostSession.Send(attackResultH.Write());
-                // _guestSession.Send(attackResultG.Write());
-                _hostSession.Send(attackResultH.Write());
-                _guestSession.Send(attackResultG.Write());
-                // _pendingListH.Add(attackResultH.Write());
-                // _pendingListG.Add(attackResultG.Write());
-                hostStopGain = false;
-                guestStopGain = false;
+                _guestSession.hp -= dmg;
             }
-
+            else if (dmg < 0)
+            {
+                _hostSession.hp -= -dmg;
+            }
+            S_AttackResult attackResultH = new S_AttackResult();
+            attackResultH.dmg = dmg;
+            S_AttackResult attackResultG = new S_AttackResult();
+            attackResultG.dmg = -dmg;
+            _hostSession.gainedDmg = 0;
+            _guestSession.gainedDmg = 0;
+            _hostSession.Send(attackResultH.Write());
+            _guestSession.Send(attackResultG.Write());
             GameEnd();
         }
     }
 
+    // 게임 종료 메서드
     public void GameEnd()
     {
         if (_hostSession.hp <= 0 || _guestSession.hp <= 0)
@@ -186,11 +155,43 @@ public class GameRoom : IJobQueue
         }
     }
 
-    public void BreakRoom()
+    public void TickTock()
     {
-        if (GameStart && (_hostSession == null || _guestSession == null))
+        lock (_lock)
         {
-            
+            if (_hostSession != null && _guestSession != null)
+            {
+                if (timer != null)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    timer = null;
+                }
+
+                timer = new System.Timers.Timer(1000);
+                timer.Elapsed += (sender, e) => TimeTick();
+                timer.AutoReset = true;
+                timer.Start();
+            }
+        }
+    }
+
+    public void TimeTick()
+    {
+        if (gameTime > 0)
+        {
+            gameTime--;
+            S_Timer ticktock = new S_Timer();
+            ticktock.second = gameTime;
+            if (_hostSession != null) 
+                _hostSession.Send(ticktock.Write());
+            if (_guestSession != null) 
+                _guestSession.Send(ticktock.Write());
+        }
+        else
+        {
+            Attack();
+            gameTime = 15;
         }
     }
 }

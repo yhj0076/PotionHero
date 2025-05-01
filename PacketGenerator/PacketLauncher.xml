@@ -22,8 +22,9 @@
         <int name="HostGainedDmg"/>
         <int name="GuestGainedDmg"/>
     </packet>
-    <packet name="C_TimeUp">
-    </packet>
     <packet name="C_JoinedGame">
+    </packet>
+    <packet name="S_Timer">
+        <int name="second"/>
     </packet>
 </PacketLauncher>

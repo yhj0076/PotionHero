@@ -38,7 +38,6 @@ public class PacketHandler
     {
         S_AttackResult attackResult = packet as S_AttackResult;
         ServerSession serverSession = session as ServerSession;
-        Console.WriteLine($"attack! : {attackResult.dmg}");
     }
 
     public static void S_BroadCastGainedDmgHandler(PacketSession session, IPacket packet)
@@ -48,5 +47,11 @@ public class PacketHandler
 
         Console.WriteLine($"\tPlayer1 gainedDmg : {gainedDmg.HostGainedDmg}\n" +
                           $"\tPlayer2 gainedDmg : {gainedDmg.GuestGainedDmg}\n");
+    }
+
+    public static void S_TimerHandler(PacketSession session, IPacket packet)
+    {
+        S_Timer timer = packet as S_Timer;
+        Console.WriteLine($"timer : {timer.second}");
     }
 }
