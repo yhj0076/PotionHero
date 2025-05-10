@@ -26,7 +26,8 @@ public interface IPacket
 
 public class S_JoinGameRoom : ByteControlHelper, IPacket
 {
-    public bool EnemyIsExist;
+    public int MySessionId;
+	public bool EnemyIsExist;
     
     public ushort Protocol { get { return (ushort)PacketType.S_JoinGameRoom; } }
     
@@ -36,7 +37,8 @@ public class S_JoinGameRoom : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.EnemyIsExist = ReadBytes(buffer, ref count, this.EnemyIsExist);
+        this.MySessionId = ReadBytes(buffer, ref count, this.MySessionId);
+		this.EnemyIsExist = ReadBytes(buffer, ref count, this.EnemyIsExist);
     }
 
     public ArraySegment<byte> Write()
@@ -50,7 +52,8 @@ public class S_JoinGameRoom : ByteControlHelper, IPacket
         
         count += sizeof(ushort);
         success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_JoinGameRoom);
-        success &= WriteBytes(ref buffer, ref count, EnemyIsExist);
+        success &= WriteBytes(ref buffer, ref count, MySessionId);
+		success &= WriteBytes(ref buffer, ref count, EnemyIsExist);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         

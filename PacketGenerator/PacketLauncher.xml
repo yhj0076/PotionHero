@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PacketLauncher>
     <packet name="S_JoinGameRoom">
+        <int name="MySessionId"/>
         <bool name="EnemyIsExist"/>
     </packet>
     <packet name="S_BroadcastGameStart">

@@ -142,6 +142,7 @@ public class GameRoom : IJobQueue
     {
         if (_hostSession.hp <= 0 || _guestSession.hp <= 0)
         {
+            timer.Stop();
             S_BroadcastEndGame endGame = new S_BroadcastEndGame();
             if (_hostSession.hp < _guestSession.hp)
             {
@@ -157,25 +158,36 @@ public class GameRoom : IJobQueue
 
     public void TickTock()
     {
-        lock (_lock)
+        if (_hostSession != null && _guestSession != null)
         {
-            if (_hostSession != null && _guestSession != null)
+            lock (_lock)
             {
                 if (timer != null)
                 {
                     timer.Stop();
                     timer.Dispose();
-                    timer = null;
                 }
 
-                timer = new System.Timers.Timer(1000);
-                timer.Elapsed += (sender, e) => TimeTick();
-                timer.AutoReset = true;
-                timer.Start();
+                var startDelayTimer = new Timer(3000);
+                startDelayTimer.AutoReset = false;
+                startDelayTimer.Elapsed += (sender, e) =>
+                {
+                    timer = new Timer(1000);
+                    timer.Elapsed += (sender, e) => TimeTick();
+                    timer.AutoReset = true;
+                    timer.Start();
+
+                    startDelayTimer.Dispose();
+                };
+                startDelayTimer.Start();
             }
         }
     }
 
+    // TODO : 1. timer는 Nullable 안되게
+    // 2. 하나의 스레드가 하나의 GameRoom을 담당하게(중요★★★★★)
+    // 3. Manager로 Class 분리(중요★★★★★)
+    
     public void TimeTick()
     {
         if (gameTime > 0)
