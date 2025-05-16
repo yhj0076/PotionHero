@@ -46,7 +46,6 @@ public class GameRoom : IJobQueue
 
     public void Enter(ClientSession session)
     {
-        session.hp = 100;
         bool enemyIsExist = false;
         // 플레이어 추가
         if (_hostSession == null)
@@ -66,12 +65,18 @@ public class GameRoom : IJobQueue
         S_JoinGameRoom joinGameRoom = new S_JoinGameRoom();
         joinGameRoom.EnemyIsExist = enemyIsExist;
         Broadcast(joinGameRoom.Write());
+        Console.WriteLine($"host : {_hostSession?.SessionId}, guest : {_guestSession?.SessionId}");
     }
 
     public void Start()
     {
         if (_hostSession != null && _guestSession != null)
         {
+            _hostSession.gainedDmg = 0;
+            _guestSession.gainedDmg = 0;
+            _hostSession.hp = 100;
+            _guestSession.hp = 100;
+            gameTime = 15;
             S_BroadcastGameStart broadcastGameStart = new S_BroadcastGameStart();
             Broadcast(broadcastGameStart.Write());
         }
@@ -190,20 +195,20 @@ public class GameRoom : IJobQueue
     
     public void TimeTick()
     {
-        if (gameTime > 0)
+        if (_hostSession != null && _guestSession != null)
         {
-            gameTime--;
-            S_Timer ticktock = new S_Timer();
-            ticktock.second = gameTime;
-            if (_hostSession != null) 
-                _hostSession.Send(ticktock.Write());
-            if (_guestSession != null) 
-                _guestSession.Send(ticktock.Write());
-        }
-        else
-        {
-            Attack();
-            gameTime = 15;
+            if (gameTime > 0)
+            {
+                gameTime--;
+                S_Timer ticktock = new S_Timer();
+                ticktock.second = gameTime;
+                Broadcast(ticktock.Write());
+            }
+            else
+            {
+                Attack();
+                gameTime = 15;
+            }
         }
     }
 }

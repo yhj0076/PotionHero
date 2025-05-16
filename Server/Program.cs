@@ -8,7 +8,8 @@ class Program
 {
     private static Listener _listener = new Listener();
     public static GameRoom _room = new GameRoom();
-    private static int portNum = 8080;
+    private static int portNum = 8088;
+    
     static void FlushRoom()
     {
         _room.Push(() =>
@@ -21,9 +22,10 @@ class Program
     static void Main(string[] args)
     {
         // DNS(Domain Name System)
-        string host = Dns.GetHostName();
-        IPHostEntry ipHost = Dns.GetHostEntry(host);
-        IPAddress ipAddress = ipHost.AddressList[0];
+        // string host = Dns.GetHostName();
+        // IPHostEntry ipHost = Dns.GetHostEntry(host);
+        IPAddress ipAddress = new NetworkInterfaceHelper().GetEthernetIPv4();
+        Console.WriteLine(ipAddress);
         IPEndPoint endPoint = new IPEndPoint(ipAddress, portNum);
         
         _listener.init(endPoint, () =>

@@ -19,6 +19,7 @@ public class ClientSession : PacketSession
         {
             Program._room.Enter(this);
             Program._room.TickTock();
+            Program._room.Start();
         });
     }
 
