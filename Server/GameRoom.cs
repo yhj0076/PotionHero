@@ -148,16 +148,20 @@ public class GameRoom : IJobQueue
         if (_hostSession.hp <= 0 || _guestSession.hp <= 0)
         {
             timer.Stop();
-            S_BroadcastEndGame endGame = new S_BroadcastEndGame();
+            S_BroadcastEndGame endGameHost = new S_BroadcastEndGame();
+            S_BroadcastEndGame endGameGuest = new S_BroadcastEndGame();
             if (_hostSession.hp < _guestSession.hp)
             {
-                endGame.WinnerId = _guestSession.SessionId;
+                endGameHost.isWin = false;
+                endGameGuest.isWin = true;
             }
             else
             {
-                endGame.WinnerId = _hostSession.SessionId;
+                endGameHost.isWin = true;
+                endGameGuest.isWin = false;
             }
-            Broadcast(endGame.Write());
+            _hostSession.Send(endGameHost.Write());
+            _guestSession.Send(endGameGuest.Write());
         }
     }
 

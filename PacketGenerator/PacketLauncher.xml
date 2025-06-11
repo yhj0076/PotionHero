@@ -7,7 +7,7 @@
     <packet name="S_BroadcastGameStart">
     </packet>
     <packet name="S_BroadcastEndGame">
-        <int name="WinnerId"/>
+        <bool name="isWin"/>
     </packet>
     <packet name="C_LeaveGame">
     </packet>

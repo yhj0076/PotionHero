@@ -101,7 +101,7 @@ public class S_BroadcastGameStart : ByteControlHelper, IPacket
 }
 public class S_BroadcastEndGame : ByteControlHelper, IPacket
 {
-    public int WinnerId;
+    public bool isWin;
     
     public ushort Protocol { get { return (ushort)PacketType.S_BroadcastEndGame; } }
     
@@ -111,7 +111,7 @@ public class S_BroadcastEndGame : ByteControlHelper, IPacket
         ReadOnlySpan<byte> buffer = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
         count += sizeof(ushort);
         count += sizeof(ushort);    // PacketType만큼 건너뛰기
-        this.WinnerId = ReadBytes(buffer, ref count, this.WinnerId);
+        this.isWin = ReadBytes(buffer, ref count, this.isWin);
     }
 
     public ArraySegment<byte> Write()
@@ -125,7 +125,7 @@ public class S_BroadcastEndGame : ByteControlHelper, IPacket
         
         count += sizeof(ushort);
         success &= WriteBytes(ref buffer, ref count, (ushort)PacketType.S_BroadcastEndGame);
-        success &= WriteBytes(ref buffer, ref count, WinnerId);
+        success &= WriteBytes(ref buffer, ref count, isWin);
         
         success &= BitConverter.TryWriteBytes(buffer, count);
         
